@@ -67,9 +67,16 @@
                         </div>
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
+                        <div id='be'></div>
+                        <div id='af'></div>
                         <script>
-                          const urls = []
+                          let be = document.getElementById('be')
+                          let af = document.getElementById('af')
+
                           function save_all(){
+                            let bef_url = be.getAttribute('aria-label');
+                            let after_url = af.getAttribute('aria-label');
+                            
                             console.log('Before: '+ urls)
                             if (bef_url != 'Could not upload file.' && after_url !='Could not upload file.'){
                               let web_host = '/send_review/data'
@@ -102,18 +109,18 @@
                             if (!bef[0] && !after[0]){
                               return alert('Please input a before and after image')
                             }
-                            getSignedRequest(bef[0])
-                            getSignedRequest(after[0])
+                            getSignedRequest(bef[0], 'be')
+                            getSignedRequest(after[0], 'af')
                             save_all()
                           }
-                          function getSignedRequest(bef){
+                          function getSignedRequest(bef, type){
                             let xhr = new XMLHttpRequest();
                             xhr.open("POST", "/sign_s3?file_name="+bef.name+"&file_type="+bef.type);
                             xhr.onreadystatechange = function(){
                               if(xhr.readyState === 4){
                                 if(xhr.status === 200){
                                   let response = JSON.parse(xhr.responseText);
-                                  uploadFile(bef, response.data, response.url);
+                                  uploadFile(bef, response.data, response.url, type);
                                 }
                                 else{
                                   alert("Problem saving your new review");
@@ -122,7 +129,7 @@
                             };
                             xhr.send();
                           }
-                          function uploadFile(file, s3Data, url){
+                          function uploadFile(file, s3Data, url, type){
                             let is_it = false
                             var xhr = new XMLHttpRequest();
                             xhr.open("POST", s3Data.url);
@@ -136,7 +143,11 @@
                             xhr.onreadystatechange = function() {
                               if(xhr.readyState === 4){
                                 if(xhr.status === 200 || xhr.status === 204){
-                                  urls.push(url)
+                                  if (type == 'be'){
+                                    be.setAttribute("aria-label", url);
+                                  }else if (type=='af'){
+                                    af.setAttribute("aria-label", url);
+                                  }
                                 }
                                 else{
                                   return "Could not upload file.";
