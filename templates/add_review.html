@@ -68,7 +68,8 @@
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
                         <script>
-                          function save_all(bef_url, after_url){
+                          let bef_url, after_url
+                          function save_all(){
                             console.log('Before: '+ bef_url)
                             console.log('After: '+ after_url)
                             if (bef_url != 'Could not upload file.' && after_url !='Could not upload file.'){
@@ -104,7 +105,7 @@
                             }
                             bef_url = getSignedRequest(bef[0]);
                             after_url = getSignedRequest(after[0]);
-                            save_all(bef_url, after_url)
+                            save_all()
                           }
                           function getSignedRequest(bef){
                             let url;
@@ -141,6 +142,7 @@
                                 if(xhr.status === 200 || xhr.status === 204){
                                   is_it = true
                                   console.log('Url: '+ url)
+                                  return url
                                 }
                                 else{
                                   return "Could not upload file.";
