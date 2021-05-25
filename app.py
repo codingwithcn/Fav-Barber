@@ -1,4 +1,4 @@
-import random
+from random import randint
 import imghdr
 import os
 import glob
@@ -279,7 +279,7 @@ def save_file_image():
           if file_name not in get_taken_names():
             break
           else:
-            file_name = file_name + str(random.randit(0, 100000))
+            file_name = file_name + str(randint(0, 100000))
         file_type= request.args.get('file_type')
         if file_name != '':
             S3_BUCKET = 'drowninbooks' 
