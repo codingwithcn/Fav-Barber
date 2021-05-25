@@ -248,14 +248,10 @@ def change_email():
     data = request.get_json()
     print(data)
     try:
-        conn = sqlite3.connect('server.db')
-        cursor = conn.cursor()
         query = """update users set email='{}' where name='{}' """.format(
             data['new_email'], data['content']
         )
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+        save_to_db(query)
         session['email']= data['new_email']
         return 'OK', 200
 
