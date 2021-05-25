@@ -318,7 +318,7 @@ def save_reviews():
     query = """insert into reviews (before_file_path, after_file_path, like_count, comment) ({}, {}, 0, {})""".format(data['Before'], data['After'], data['Comment'])
     cursor.execute(query)
     conn.commit()
-    return "Good", 200
+    return {"result":"Good"}, 200
   return {'result':"Issue"}, 200
 
 def get_taken_names():
