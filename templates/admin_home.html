@@ -115,21 +115,21 @@
                             {% else %}
                                 <div>
                                     <div class="div-block-9" style='left: -370px;'>
-                                        <button onclick="edit_comment('{{i[0]['id']}}')" class="button-10 w-button">Edit</button>
-                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
-                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
+                                        <button onclick="edit_comment('{{i['id']}}')" class="button-10 w-button">Edit</button>
+                                        <img src="{{i['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
+                                        <img src="{{i['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
                                         <div>
                                             <h1 class="heading-6"> &nbsp;&nbsp;&nbsp;Before</h1>
                                         </div>
                                         <div>
                                             <img src="/static/images/hearts.png" loading="lazy" width="88" sizes="88px" alt="" class="image-8"/>
-                                            <div class="text-block-2">{{i[0]['after_file_path']}}</div>
+                                            <div class="text-block-2">{{i['after_file_path']}}</div>
                                         </div>
                                         <div>
                                             <h1 class="heading-7">After      </h1>
                                         </div>
                                         <div>
-                                            <blockquote id='com_{{i[0]["id"]}}' class="block-quote-3">{{i[0]['comment']}}</blockquote>
+                                            <blockquote id='com_{{i["id"]}}' class="block-quote-3">{{i[0]['comment']}}</blockquote>
                                         </div>
                                     </div>
                                 </div>
