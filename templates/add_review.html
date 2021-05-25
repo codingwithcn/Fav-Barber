@@ -67,8 +67,8 @@
                         </div>
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
-                        <div id='be' aria-label=''></div>
-                        <div id='af' aria-label=''></div>
+                        <div id='be' aria-label='nun'></div>
+                        <div id='af' aria-label='nun'></div>
                         <script>
                           let be = document.getElementById('be')
                           let af = document.getElementById('af')
@@ -126,7 +126,7 @@
                             };
                             xhr.send(postData);
                           }
-                          
+
                           function save_all(){
                             let bef_url = document.getElementById('be').getAttribute('aria-label');
                             let after_url = document.getElementById('af').getAttribute('aria-label');
