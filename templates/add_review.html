@@ -68,8 +68,7 @@
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
                         <script>
-                          let bef_url, after_url
-                          function save_all(){
+                          function save_all(bef_url, after_url){
                             console.log('Before: '+ bef_url)
                             console.log('After: '+ after_url)
                             if (bef_url != 'Could not upload file.' && after_url !='Could not upload file.'){
@@ -103,9 +102,10 @@
                             if (!bef[0] && !after[0]){
                               return alert('Please input a before and after image')
                             }
+                            let bef_url, after_url
                             bef_url = getSignedRequest(bef[0]);
                             after_url = getSignedRequest(after[0]);
-                            save_all()
+                            save_all(bef_url, after_url)
                           }
                           function getSignedRequest(bef){
                             let url;
