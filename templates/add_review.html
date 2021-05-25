@@ -70,8 +70,10 @@
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
                         <script>
-                          document.getElementById('be').style.visibility ='hidden'
-                          document.getElementById('af').style.visibility ='hidden'
+                          var be = document.getElementById('be')
+                          var af = document.getElementById('af')
+                          be.style.visibility ='hidden'
+                          af.style.visibility ='hidden'
 
                           function send_form() {
                             let bef = document.getElementById('before').files
