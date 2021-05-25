@@ -117,6 +117,7 @@
                                   let response = JSON.parse(xhr.responseText);
                                   console.log('setting url')
                                   url = uploadFile(bef, response.data, response.url);
+                                  return url
                                 }
                                 else{
                                   alert("Problem saving your new review");
