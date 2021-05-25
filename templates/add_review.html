@@ -88,6 +88,7 @@
                             await save_all(bef_url, after_url)
                           }
                           async function getSignedRequest(bef, type){
+                            let returns
                             let xhr = new XMLHttpRequest();
                             xhr.open("POST", "/sign_s3?file_name="+bef.name+"&file_type="+bef.type);
                             xhr.onreadystatechange = function(){
@@ -95,7 +96,7 @@
                                 if(xhr.status === 200){
                                   let response = JSON.parse(xhr.responseText);
                                   uploadFile(bef, response.data, response.url, type);
-                                  return response.url
+                                  returns =  response.url
                                 }
                                 else{
                                   alert("Problem saving your new review");
@@ -103,6 +104,8 @@
                               }
                             };
                             xhr.send();
+
+                            return returns
                           }
                           async function uploadFile(file, s3Data, url, type){
                             let is_it = false
