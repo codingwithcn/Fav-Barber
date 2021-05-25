@@ -303,6 +303,7 @@ def save_file_image():
 @app.route('/send_review/data',methods=['POST'])
 def save_reviews():
   data = request.get_json()
+  print('datas', data)
   conn = sqlite3.connect('server.db')
   cursor = conn.cursor()
   f = False
