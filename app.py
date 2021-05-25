@@ -275,6 +275,11 @@ def add_review():
 def save_file_image():
     try:
         file_name = request.args.get('file_name')
+        while True:
+          if file_name not in get_taken_names():
+            break
+          else:
+            file_name = file_name + str(random.randit(0, 100000))
         file_type= request.args.get('file_type')
         if file_name != '':
             S3_BUCKET = 'drowninbooks' 
