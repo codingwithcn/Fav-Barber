@@ -81,12 +81,31 @@
                             if (!bef[0] && !after[0]){
                               return alert('Please input a before and after image')
                             }
-
-                            var bef_url = await getSignedRequest(bef[0], 'be')
-                            var after_url = await getSignedRequest(after[0], 'af')
-
-                            await save_all(bef_url, after_url)
-                          }
+                            let bef_url, after_url;
+                            fetch('/sign_s3?file_name='+bef.name+'&file_type='+bef.type,{
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                            }).then(result => {
+                              return result.json()
+                            }).then(data => {
+                              uploadFile(bef, data.data, data.url, 'be')
+                              bef_url =  data.url
+                              fetch('/sign_s3?file_name='+after.name+'&file_type='+after.type, {
+                                method: "POST",
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                }
+                              }).then(result => {
+                                return result.json()
+                              }).then(data => {
+                                uploadFile(after, data.data, data.url, 'af')
+                                after_url = data.url
+                                await save_all(bef_url, after_url)
+                              })
+                            })
+                          }/*
                           async function getSignedRequest(bef, type){
                             let returns
                             let xhr = new XMLHttpRequest();
@@ -106,7 +125,7 @@
                             xhr.send();
 
                             return returns
-                          }
+                          }*/
                           async function uploadFile(file, s3Data, url, type){
                             let is_it = false
                             var xhr = new XMLHttpRequest();
