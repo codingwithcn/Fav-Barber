@@ -126,6 +126,7 @@
                             return url
                           }
                           function uploadFile(file, s3Data, url){
+                            let is_it = false
                             var xhr = new XMLHttpRequest();
                             xhr.open("POST", s3Data.url);
 
@@ -138,7 +139,7 @@
                             xhr.onreadystatechange = function() {
                               if(xhr.readyState === 4){
                                 if(xhr.status === 200 || xhr.status === 204){
-                                  continue
+                                  is_it = true
                                 }
                                 else{
                                   return "Could not upload file.";
@@ -146,8 +147,10 @@
                             }
                             };
                             xhr.send(postData);
-
-                            return url
+                            
+                            if (is_it){
+                              return url
+                            }
                           }
                         </script>
                     </div>
