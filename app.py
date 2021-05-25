@@ -313,7 +313,7 @@ def save_reviews():
     else:
       f = True
   if f:
-    query = """insert into reviews (before_file_path, after_file_path, like_count, comment) VALUES ({}, {}, 0, {})""".format(data['Before'], data['After'], data['Comment'])
+    query = """insert into reviews (before_file_path, after_file_path, like_count, comment) VALUES ('{}', '{}', 0, '{}')""".format(data['Before'], data['After'], data['Comment'])
     print(query)
     cursor.execute(query)
     conn.commit()
