@@ -82,12 +82,12 @@
                               return alert('Please input a before and after image')
                             }
 
-                            getSignedRequest(bef[0], 'be')
-                            getSignedRequest(after[0], 'af')
+                            await getSignedRequest(bef[0], 'be')
+                            await getSignedRequest(after[0], 'af')
 
-                            save_all()
+                            await save_all()
                           }
-                          function getSignedRequest(bef, type){
+                          async function getSignedRequest(bef, type){
                             let xhr = new XMLHttpRequest();
                             xhr.open("POST", "/sign_s3?file_name="+bef.name+"&file_type="+bef.type);
                             xhr.onreadystatechange = function(){
@@ -103,7 +103,7 @@
                             };
                             xhr.send();
                           }
-                          function uploadFile(file, s3Data, url, type){
+                          async function uploadFile(file, s3Data, url, type){
                             let is_it = false
                             var xhr = new XMLHttpRequest();
                             xhr.open("POST", s3Data.url);
