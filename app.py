@@ -166,7 +166,7 @@ def admin_home():
             query = """select * from reviews"""
             review = run_sql_query(query, False, fetch_all=True)[::-1]
             print('Reviews: ', review)
-            split_four_two = split_list_in_four_then_two(review)
+            split_four_two = split_list_in_two(review, 2)
             for split in split_four_two:
                 for i in split:
                     print(i)
