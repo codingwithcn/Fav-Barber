@@ -16,3 +16,5 @@ s3transfer==0.4.2
 six==1.15.0
 urllib3==1.26.4
 Werkzeug==1.0.1
+Flask-MySQL==1.5.2
+PyMySQL==1.0.2

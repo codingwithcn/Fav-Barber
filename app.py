@@ -12,14 +12,22 @@ from email.mime.multipart import MIMEMultipart
 import smtplib, ssl, os, boto3, json
 import sqlite3
 import socket
+from flaskext.mysql import MySQL
+import pymysql
+
 print('Hostname', socket.gethostbyname(socket.gethostname()))
 app = Flask(__name__)
 app.secret_key = 'ChidozieNnajiMySQLAdminDbhost2005@gmail.com#codewithcn.com'
 app.host=socket.gethostbyname(socket.gethostname())
-#app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif', '.ai', '.bmp', '.ico', '.jpeg',
-'.ps', '.psd', '.svg', '.tif', '.tiff', '.eps', '.indd', '.raw', '.cr2','.crw', '.nef', '.pef']
-app.config['UPLOAD_PATH'] = 'static/images/reviews'
+
+"""Setting app config"""
+app.config['MYSQL_DATABASE_HOST'] = os.environ['MYSQL_HOST']
+app.config['MYSQL_DATABASE_USER'] = os.environ['MYSQL_USER']
+app.config['MYSQL_DATABASE_PASSWORD'] = os.environ['MYSQL_PASSWORD']
+app.config['MYSQL_DATABASE_DB'] = os.environ['MYSQL_DB']
+"""Done setting app config"""
+mysql = MySQL()
+mysql.init_app(app)
 
 def check_type(stuff, types):
     if  type(stuff) == type(types):
@@ -52,6 +60,43 @@ def send_email(subject, message, email, emailer, emailer_pass):
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, messages.as_string())
 
+def connect_to_db():
+  conn = mysql.connect()
+  cursor = conn.cursor(pymysql.cursors.DictCursor)
+  return conn, cursor
+
+def run_sql_query(query, fetch_one, fetch_all=False, fetch_many=False, size =0):
+  try:
+    conn, cursor = connect_to_db()
+    cursor.execute(query)
+    if fetch_one == True:
+      value= cursor.fetchone()
+    elif fetch_all==True:
+      value= cursor.fetchall()
+    else:
+      value= cursor.fetchmany(size)
+  except Exception as e:
+    print(e)
+    value= None
+  finally:
+    cursor.close()
+    conn.close()
+  return value
+
+def save_to_db(query):
+  try:
+    conn, cursor = connect_to_db()
+    cursor.execute(query)
+    conn.commit()
+    val = 'NO ISSUE'
+  except Exception as e:
+    print(e)
+    val = "ISSUE"
+  finally:
+    cursor.close()
+    conn.close()
+  return val
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -66,11 +111,8 @@ def contact():
         number = request.form["Contact-Phone-Number"]
         message = request.form["Message"]
         statement = name + ' wants to set an appointment at '+ date +';\n You can reach them at (Email): '+ email +' or at (Phone): '+ number + '\nThere message was: ' + message
-        conn = sqlite3.connect('server.db')
-        cursor = conn.cursor()
         query = """select email from users"""
-        cursor.execute(query)
-        emails =  cursor.fetchall()
+        emails =  run_sql_query(query, False, fetch_all=True)
         for i in emails:
           send_email('Contact for Barber Appointment', statement, i,'nnajisgai@icloud.com', 'vhow-umlp-oobe-uuls')
         msg = 'Appointment recieved I will try to get to you as soon as possible.' 
@@ -78,11 +120,8 @@ def contact():
 
 @app.route('/reviews', methods=['GET'])
 def reviews():
-    conn = sqlite3.connect('server.db')
-    cursor = conn.cursor()
     query = """select * from reviews"""
-    cursor.execute(query)
-    review = cursor.fetchall()
+    review = run_sql_query(query, False, fetch_all=True)
     print(review, type(review))
     return render_template('review.html', review=review[::-1])
 
@@ -91,15 +130,10 @@ def add_likes():
     data = request.get_json() 
     print(data)
     try:
-        conn = sqlite3.connect('server.db')
-        cursor = conn.cursor()
         query = """select like_count from reviews where id={}""".format(int(data["content"]))
-        cursor.execute(query)
-        count = cursor.fetchone()[0]
+        count = run_sql_query(query, True)['id']
         query = """update reviews set like_count={} where id={}""".format(count+1, int(data["content"]))
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+        save_to_db(query)
         return str(count+1), 200
     except Exception as e:
         print(e)
@@ -129,16 +163,12 @@ def split_list_in_four_then_two(list):
 def admin_home():
     try:
         if session['id']:
-            conn = sqlite3.connect('server.db')
-            cursor = conn.cursor()
             query = """select * from reviews"""
-            cursor.execute(query)
-            review = cursor.fetchall()[::-1]
+            review = run_sql_query(query, False, fetch_all=True)[::-1]
             split_four_two = split_list_in_four_then_two(review)
             for split in split_four_two:
                 for i in split:
                     print(i)
-            conn.close()
             return render_template('admin_home.html', splitted=split_four_two, name=session['name'])
 
     except KeyError:
@@ -152,14 +182,10 @@ def admin_login():
         name = request.form["First-Name"]
         password = request.form["Last-Name"]
         email = request.form["Email"]
-        conn = sqlite3.connect('server.db')
-        cursor = conn.cursor()
         query = """select id from users where name='{}' and password='{}' and email='{}' """.format(
             name, password, email
         )
-        print(query)
-        cursor.execute(query)
-        ids = cursor.fetchone()
+        ids = run_sql_query(query, True)['id']
         print(ids)
         if ids != None:
             session['id'] = ids[0]
@@ -176,14 +202,10 @@ def change_comment():
     data = request.get_json() 
     print(data)
     try:
-        conn = sqlite3.connect('server.db')
-        cursor = conn.cursor()
         query = """update reviews set comment="{}" where id={}""".format(
             data['new_comment'], int(data["content"])
         )
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+        save_to_db(query)
         return data['new_comment'], 200
 
     except Exception as e:
@@ -194,14 +216,10 @@ def change_comment():
 def change_name():
     data = request.get_json()
     try:
-        conn = sqlite3.connect('server.db')
-        cursor = conn.cursor()
         query = """update users set name="{}" where name="{}" """.format(
             data['new_name'], data['content']
         )
-        cursor.execute(query)
-        conn.commit()
-        conn.close() 
+        save_to_db(query)
         session['name'] = data['new_name']
         return data['new_name'], 200
 
@@ -214,14 +232,10 @@ def change_password():
     data = request.get_json()
     print(data)
     try:
-        conn = sqlite3.connect('server.db')
-        cursor = conn.cursor()
         query = """update users set password='{}' where name='{}' """.format(
             data['new_password'], data['content']
         )
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+        save_to_db(query)
         session['password']= data['new_password']
         return 'OK', 200
     except Exception as e:
@@ -247,14 +261,6 @@ def change_email():
     except Exception as e:
         print(e)
         return "Issue"
-
-def validate_image(stream):
-    header = stream.read(512)
-    stream.seek(0)
-    format = imghdr.what(None, header)
-    if not format:
-        return None
-    return '.' + (format if format != 'jpeg' else 'jpg')
 
 @app.errorhandler(413)
 def too_large(e):
@@ -308,8 +314,6 @@ def save_file_image():
 @app.route('/send_review/data',methods=['POST'])
 def save_reviews():
   data = request.get_json()
-  conn = sqlite3.connect('server.db')
-  cursor = conn.cursor()
   f = False
   for i in data:
     if len(data[i]) <=0:
@@ -319,9 +323,7 @@ def save_reviews():
       f = True
   if f:
     query = """insert into reviews (before_file_path, after_file_path, like_count, comment) VALUES ('{}', '{}', 0, '{}')""".format(data['Before'], data['After'], data['Comment'])
-    print(query)
-    cursor.execute(query)
-    conn.commit()
+    save_to_db(query)
     return {"result":"Good"}, 200
   return {'result':"Issue"}, 200
 
