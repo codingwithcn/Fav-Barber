@@ -131,7 +131,7 @@ def add_likes():
     print(data)
     try:
         query = """select like_count from reviews where id={}""".format(int(data["content"]))
-        count = run_sql_query(query, True)['id']
+        count = run_sql_query(query, True)['like_Count']
         query = """update reviews set like_count={} where id={}""".format(count+1, int(data["content"]))
         save_to_db(query)
         return str(count+1), 200
