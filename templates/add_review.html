@@ -102,7 +102,7 @@
                               }).then(data => {
                                 uploadFile(after, data.data, data.url, 'af')
                                 after_url = data.url
-                                await save_all(bef_url, after_url)
+                                save_all(bef_url, after_url)
                               })
                             })
                           }/*
