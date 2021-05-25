@@ -67,11 +67,9 @@
                         </div>
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
-                        <div id='be' aria-label='nun'></div>
-                        <div id='af' aria-label='nun'></div>
+                        <div id='be'></div>
+                        <div id='af'></div>
                         <script>
-                          var be = document.getElementById('be')
-                          var af = document.getElementById('af')
 
                           function send_form() {
                             let bef = document.getElementById('before').files
@@ -79,9 +77,14 @@
                             if (!bef[0] && !after[0]){
                               return alert('Please input a before and after image')
                             }
+
                             getSignedRequest(bef[0], 'be')
                             getSignedRequest(after[0], 'af')
-                            save_all()
+
+                            var be = document.getElementById('be')
+                            var af = document.getElementById('af')
+
+                            save_all(be, af)
                           }
                           function getSignedRequest(bef, type){
                             let xhr = new XMLHttpRequest();
@@ -127,9 +130,9 @@
                             xhr.send(postData);
                           }
 
-                          function save_all(){
-                            let bef_url = document.getElementById('be').getAttribute('aria-label');
-                            let after_url = document.getElementById('af').getAttribute('aria-label');
+                          function save_all(be, af){
+                            let bef_url = be.getAttribute('aria-label');
+                            let after_url = af.getAttribute('aria-label');
 
                             console.log('bef_url: ' + bef_url)
                             console.log('after_url: '+ after_url)
