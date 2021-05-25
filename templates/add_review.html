@@ -68,7 +68,7 @@
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
                         <script>
-                          let urls = []
+                          const urls = []
                           function save_all(bef_url, after_url){
                             console.log('Before: '+ urls)
                             if (bef_url != 'Could not upload file.' && after_url !='Could not upload file.'){
