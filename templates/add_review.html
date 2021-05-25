@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div>{{msg}}</div>
-                        <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/></button>
+                        <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
                         <script>
                           function send_form() {
                             let bef = document.getElementById('before').files
@@ -117,7 +117,7 @@
                                 },
                                 body: JSON.stringify({
                                   'Before': bef_url,
-                                  'After': after_url
+                                  'After': after_url,
                                   'Comment': document.getElementById('Comment').value
                                 })
                               }).then(result => {
