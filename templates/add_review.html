@@ -67,8 +67,8 @@
                         </div>
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
-                        <div id='be'></div>
-                        <div id='af'></div>
+                        <div id='be' aria-label=''></div>
+                        <div id='af' aria-label=''></div>
                         <script>
                           let be = document.getElementById('be')
                           let af = document.getElementById('af')
@@ -76,7 +76,10 @@
                           function save_all(){
                             let bef_url = be.getAttribute('aria-label');
                             let after_url = af.getAttribute('aria-label');
-                            
+
+                            console.log('bef_url: ' + bef_url)
+                            console.log('after_url: '+ after_url)
+
                             if (bef_url != 'Could not upload file.' && after_url !='Could not upload file.'){
                               let web_host = '/send_review/data'
                               fetch(web_host, {
