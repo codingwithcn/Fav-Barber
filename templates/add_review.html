@@ -85,6 +85,7 @@
                               if(xhr.readyState === 4){
                                 if(xhr.status === 200){
                                   let response = JSON.parse(xhr.responseText);
+                                  console.log('setting before url')
                                   bef_url = uploadFile(bef, response.data, response.url);
                                 }
                                 else{
@@ -99,6 +100,7 @@
                               if(xhr.readyState === 4){
                                 if(xhr.status === 200){
                                   response = JSON.parse(xhr.responseText);
+                                  console.log('setting after url')
                                   after_url = uploadFile(after, response.data, response.url);
                                 }
                                 else{
