@@ -83,11 +83,7 @@
                             getSignedRequest(bef[0], 'be')
                             getSignedRequest(after[0], 'af')
 
-                            var be = document.getElementById('be')
-                            var af = document.getElementById('af')
-
-
-                            save_all(be.value, af.value)
+                            save_all()
                           }
                           function getSignedRequest(bef, type){
                             let xhr = new XMLHttpRequest();
@@ -134,11 +130,12 @@
                           }
 
                           function save_all(be, af){
+                            var be = document.getElementById('be')
+                            var af = document.getElementById('af')
+                            console.log('bef_url: ' + be.value)
+                            console.log('after_url: '+ af.value)
 
-                            console.log('bef_url: ' + be)
-                            console.log('after_url: '+ af)
-
-                            if (be != 'Could not upload file.' && af !='Could not upload file.'){
+                            if (be.value != 'Could not upload file.' && af.value !='Could not upload file.'){
                               let web_host = '/send_review/data'
                               fetch(web_host, {
                                 method: 'POST',
@@ -146,8 +143,8 @@
                                   'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({
-                                  'Before': be,
-                                  'After': af,
+                                  'Before': be.value,
+                                  'After': af.value,
                                   'Comment': document.getElementById('Comment').value
                                 })
                               }).then(result => {
