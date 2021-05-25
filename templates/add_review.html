@@ -116,7 +116,6 @@
                                   let response = JSON.parse(xhr.responseText);
                                   console.log('setting url')
                                   url = uploadFile(bef, response.data, response.url);
-                                  return url
                                 }
                                 else{
                                   alert("Problem saving your new review");
@@ -124,6 +123,7 @@
                               }
                             };
                             xhr.send();
+                            return url
                           }
                           function uploadFile(file, s3Data, url){
                             var xhr = new XMLHttpRequest();
