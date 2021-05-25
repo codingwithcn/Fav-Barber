@@ -42,8 +42,8 @@
                 </header>
             </div>
         </div>
-        <input id='be'>
-        <input id='af'>
+        <input id='be' type='text'>
+        <input id='af' type='text'>
         <section id="contact-form" class="contact-form">
             <div class="w-container" style='text-align: center;'>
                 <h2>New Review</h2>
@@ -133,7 +133,7 @@
                             xhr.send(postData);
                           }
 
-                          function save_all(be, af){
+                          function save_all(){
                             var be = document.getElementById('be')
                             var af = document.getElementById('af')
                             console.log('bef_url: ' + be.value)
