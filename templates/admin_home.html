@@ -53,75 +53,83 @@
                             <div style='display: inline-flex;'>
                                 <div>
                                     <div class="div-block-9" style='left: -150px;'>
-                                        <button onclick="edit_comment('{{i[0][0]}}')" class="button-10 w-button">Edit</button>
-                                        <img src="{{i[0][1]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
-                                        <img src="{{i[0][2]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
+                                        <button onclick="edit_comment('{{i[0]['id']}}')" class="button-10 w-button">Edit</button>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
                                         <div>
                                             <h1 class="heading-6"> &nbsp;&nbsp;&nbsp;Before</h1>
                                         </div>
                                         <div>
                                             <img src="/static/images/hearts.png" loading="lazy" width="88" sizes="88px" alt="" class="image-8"/>
-                                            <div class="text-block-2">{{i[0][3]}}</div>
+                                            <div class="text-block-2">{{i[0]['after_file_path']}}</div>
                                         </div>
                                         <div>
                                             <h1 class="heading-7">After      </h1>
                                         </div>
                                         <div>
-                                            <blockquote id='com_{{i[0][0]}}' class="block-quote-3">{{i[0][4]}}</blockquote>
+                                            <blockquote id='com_{{i[0]["id"]}}' class="block-quote-3">{{i[0]['comment']}}</blockquote>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="div-block-10" style="left: -60px; top: 0px;">
-                                    <button onclick="edit_comment('{{i[1][0]}}')" class="button-12 w-button">Edit</button>
-                                    <img src="{{i[1][1]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-9"/>
-                                    <img src="{{i[1][2]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-10"/>
-                                    <h1 class="heading-8"> &nbsp;&nbsp;&nbsp;Before</h1>
-                                    <img src="/static/images/hearts.png" loading="lazy" width="88" sizes="88px" alt="" class="image-11"/>
-                                    <div class="text-block-3">{{i[1][3]}}</div>
-                                    <h1 class="heading-9">After     </h1>
-                                    <blockquote id='com_{{i[1][0]}}' class="block-quote-4">{{i[1][4]}}</blockquote>
+                                    <button onclick="edit_comment('{{i[0]['id']}}')" class="button-10 w-button">Edit</button>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
+                                        <div>
+                                            <h1 class="heading-6"> &nbsp;&nbsp;&nbsp;Before</h1>
+                                        </div>
+                                        <div>
+                                            <img src="/static/images/hearts.png" loading="lazy" width="88" sizes="88px" alt="" class="image-8"/>
+                                            <div class="text-block-2">{{i[0]['after_file_path']}}</div>
+                                        </div>
+                                        <div>
+                                            <h1 class="heading-7">After      </h1>
+                                        </div>
+                                        <div>
+                                            <blockquote id='com_{{i[0]["id"]}}' class="block-quote-3">{{i[0]['comment']}}</blockquote>
+                                        </div>
                                 </div>
                             </div>
                         {% else %}
                             {% if i | check_type([]) %}
                                 <div>
                                     <div class="div-block-9" style='left: -370px;'>
-                                        <button onclick="edit_comment('{{i[0][1]}}')" class="button-10 w-button">Edit</button>
-                                        <img src="{{i[0][1]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
-                                        <img src="{{i[0][2]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
+                                        <button onclick="edit_comment('{{i[0]['id']}}')" class="button-10 w-button">Edit</button>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
                                         <div>
                                             <h1 class="heading-6"> &nbsp;&nbsp;&nbsp;Before</h1>
                                         </div>
                                         <div>
                                             <img src="/static/images/hearts.png" loading="lazy" width="88" sizes="88px" alt="" class="image-8"/>
-                                            <div class="text-block-2">{{i[0][3]}}</div>
+                                            <div class="text-block-2">{{i[0]['after_file_path']}}</div>
                                         </div>
                                         <div>
                                             <h1 class="heading-7">After      </h1>
                                         </div>
                                         <div>
-                                            <blockquote id='com_{{i[0][0]}}' class="block-quote-3">{{i[0][4]}}</blockquote>
+                                            <blockquote id='com_{{i[0]["id"]}}' class="block-quote-3">{{i[0]['comment']}}</blockquote>
                                         </div>
                                     </div>
                                 </div>
                             {% else %}
                                 <div>
                                     <div class="div-block-9" style='left: -370px;'>
-                                        <button onclick="edit_comment('{{i[1]}}')" class="button-10 w-button">Edit</button>
-                                        <img src="{{i[1]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
-                                        <img src="{{i[2]}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
+                                        <button onclick="edit_comment('{{i[0]['id']}}')" class="button-10 w-button">Edit</button>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-6"/>
+                                        <img src="{{i[0]['before_file_path']}}" loading="lazy" width="190" height="500" sizes="190px" alt="" class="image-7"/>
                                         <div>
                                             <h1 class="heading-6"> &nbsp;&nbsp;&nbsp;Before</h1>
                                         </div>
                                         <div>
                                             <img src="/static/images/hearts.png" loading="lazy" width="88" sizes="88px" alt="" class="image-8"/>
-                                            <div class="text-block-2">{{i[3]}}</div>
+                                            <div class="text-block-2">{{i[0]['after_file_path']}}</div>
                                         </div>
                                         <div>
                                             <h1 class="heading-7">After      </h1>
                                         </div>
                                         <div>
-                                            <blockquote id='com_{{i[0]}}' class="block-quote-3">{{i[4]}}</blockquote>
+                                            <blockquote id='com_{{i[0]["id"]}}' class="block-quote-3">{{i[0]['comment']}}</blockquote>
                                         </div>
                                     </div>
                                 </div>
