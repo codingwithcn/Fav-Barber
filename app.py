@@ -303,19 +303,18 @@ def save_file_image():
 @app.route('/send_review/data',methods=['POST'])
 def save_reviews():
   data = request.get_json()
-  print('datas', data)
   conn = sqlite3.connect('server.db')
   cursor = conn.cursor()
   f = False
   for i in data:
-    print('data', data[i])
     if len(data[i]) <=0:
       f= False
       break
     else:
       f = True
   if f:
-    query = """insert into reviews (before_file_path, after_file_path, like_count, comment) values({}, {}, 0, {})""".format(data['Before'], data['After'], data['Comment'])
+    query = """insert into reviews (before_file_path, after_file_path, like_count, comment) VALUES ({}, {}, 0, {})""".format(data['Before'], data['After'], data['Comment'])
+    print(query)
     cursor.execute(query)
     conn.commit()
     return {"result":"Good"}, 200
