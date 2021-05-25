@@ -53,7 +53,7 @@
         {% for i in review %}
             <div class="div-block-8" style="justify-self: center; text-align: center;">
                 <div class="div-block-4">
-                    <img data-src={{i[1]}} loading="lazy" width="135" sizes="230px"  alt="" class="lazyload"
+                    <img data-src={{i['before_file_path']}} loading="lazy" width="135" sizes="230px"  alt="" class="lazyload"
                     style="position: relative;
                     left: -228px;
                     width: 230px;
@@ -67,10 +67,10 @@
                 <div class="div-block-7">
                     <input type="image" style="position: relative; right: -16px; bottom: -37px; top: 30px; left:5px;" src="/static/images/hearts.png" role="button" onClick="add_like('{{i[0]}}')" loading="lazy" width="90" sizes="90px" alt="like" 
                     class="lazyload">
-                    <div class="text-block" id='likes_count{{i[0]}}'>{{i[3]}}</div>
+                    <div class="text-block" id='likes_count{{i["id"]}}'>{{i['like_count']}}</div>
                 </div>
                 <div class="div-block-5">
-                    <img data-src={{i[2]}} loading="lazy" sizes="230px" alt="" 
+                    <img data-src={{i['after_file_path']}} loading="lazy" sizes="230px" alt="" 
                     style="position: relative;
                     left: 233px;
                     right: -106px;
@@ -83,7 +83,7 @@
                     class="lazyload"/>
                     <h1 class="heading-5">After</h1>
                 </div>
-                <blockquote class="block-quote">{{i[4]}}</blockquote>
+                <blockquote class="block-quote">{{i['comment']}}</blockquote>
             </div>
             <br> <br><br><br>
         {% endfor %}
