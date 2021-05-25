@@ -317,7 +317,7 @@ def save_reviews():
     cursor.execute(query)
     conn.commit()
     return "Good", 200
-  return "Issue", 200
+  return {'result':"Issue"}, 200
 
 def get_taken_names():
   s3 = boto3.resource('s3')
