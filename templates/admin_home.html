@@ -47,8 +47,8 @@
             <button id ='name_change' onclick="change_name('{{name}}')" class="button-8 w-button">Change Name</button>
             <button id ='email_change' onclick="change_email('{{name}}')" class="button-6 w-button">Change Email</button>
             <div>
-                {% for split in splitted %}
-                        {% if split | check_len == 2 %}
+                {% for i in splitted %}
+                        {% if i | check_len == 2 %}
                             <div style='display: inline-flex;'>
                                 <div>
                                     <div class="div-block-9" style='left: -150px;'>
