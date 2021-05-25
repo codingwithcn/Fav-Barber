@@ -307,6 +307,7 @@ def save_reviews():
   cursor = conn.cursor()
   f = False
   for i in data:
+    print('data', data[i])
     if len(data[i]) <=0:
       f= False
       break
