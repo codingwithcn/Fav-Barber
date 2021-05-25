@@ -82,7 +82,7 @@
                               return alert('Please input a before and after image')
                             }
                             let bef_url, after_url;
-                            fetch('/sign_s3?file_name='+bef.name+'&file_type='+bef.type,{
+                            fetch('/sign_s3?file_name='+bef[0].name+'&file_type='+bef[0].type,{
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -90,9 +90,9 @@
                             }).then(result => {
                               return result.json()
                             }).then(data => {
-                              uploadFile(bef, data.data, data.url, 'be')
+                              uploadFile(bef[0], data.data, data.url, 'be')
                               bef_url =  data.url
-                              fetch('/sign_s3?file_name='+after.name+'&file_type='+after.type, {
+                              fetch('/sign_s3?file_name='+after[0].name+'&file_type='+after[0].type, {
                                 method: "POST",
                                 headers: {
                                   'Content-Type': 'application/json'
@@ -100,7 +100,7 @@
                               }).then(result => {
                                 return result.json()
                               }).then(data => {
-                                uploadFile(after, data.data, data.url, 'af')
+                                uploadFile(after[0], data.data, data.url, 'af')
                                 after_url = data.url
                                 save_all(bef_url, after_url)
                               })
