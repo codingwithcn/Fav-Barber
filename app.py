@@ -9,7 +9,7 @@ import email
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
-import smtplib, ssl, os
+import smtplib, ssl, os, boto3, json
 import sqlite3
 import socket
 print('Hostname', socket.gethostbyname(socket.gethostname()))
@@ -72,7 +72,7 @@ def contact():
         cursor.execute(query)
         emails =  cursor.fetchall()
         for i in emails:
-            send_email('Contact for Barber Appointment', statement, i,'nnajisgai@icloud.com', 'vhow-umlp-oobe-uuls')
+          send_email('Contact for Barber Appointment', statement, i,'nnajisgai@icloud.com', 'vhow-umlp-oobe-uuls')
         msg = 'Appointment recieved I will try to get to you as soon as possible.' 
     return render_template('appointments.html', msg=msg)
 
@@ -129,7 +129,6 @@ def split_list_in_four_then_two(list):
 def admin_home():
     try:
         if session['id']:
-            print('session created')
             conn = sqlite3.connect('server.db')
             cursor = conn.cursor()
             query = """select * from reviews"""
@@ -193,8 +192,7 @@ def change_comment():
 
 @app.route('/change_name', methods=['POST'])
 def change_name():
-    data = request.get_json() 
-    print(data)
+    data = request.get_json()
     try:
         conn = sqlite3.connect('server.db')
         cursor = conn.cursor()
@@ -273,77 +271,61 @@ def add_review():
         print('session not created')
         return redirect('/admin/login')
 
-@app.route("/add/review", methods=['POST'])
-def review_func():
+@app.route('/sign_s3', methods=['POST'])
+def save_file_image():
     try:
-        if session['id']:
-            msg= ''
-            # This will be for the before image
-            uploaded_file = request.files["Before"]
-            before_filename = secure_filename(uploaded_file.filename)
-            if before_filename != '':
-                file_ext = os.path.splitext(before_filename)[1]
-                if file_ext not in app.config['UPLOAD_EXTENSIONS'] or \
-                        file_ext != validate_image(uploaded_file.stream):
-                    msg = "Before Image Is Invalid"
-                if msg == '':
-                    if before_filename not in get_taken_names():
-                        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], before_filename))
-                    else:
-                        new_name = ''
-                        while True:
-                            new_name = before_filename + str(random.randint(0, 100))
-                            if new_name not in get_taken_names():
-                                uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], new_name))
-                                before_filename = new_name
-                            break
-            
-                    # This is for the after image
-                    uploaded_file = request.files["After"]
-                    after_filename = secure_filename(uploaded_file.filename)
-                    if after_filename != '':
-                        file_ext = os.path.splitext(after_filename)[1]
-                        if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_file.stream):
-                            if msg != '':
-                                msg += " and After Image Is Invalid"
-                            else: 
-                                msg = 'After Image Is Invalid'
-                        if msg == '':
-                            if after_filename not in get_taken_names():
-                                uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], after_filename))
-                            else:
-                                new_name = ''
-                                while True:
-                                    new_name = after_filename + str(random.randint(0, 100))
-                                    if new_name not in get_taken_names():
-                                        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], new_name))
-                                        after_filename = new_name
-                                    break
-            
-                            # This is for the commentary of the before and after images
-                            comment = request.form["Comment"]
-                            print('Before file_name:', before_filename, 'After file_name:', after_filename,
-                            'comment:', comment)
-                            conn = sqlite3.connect('server.db')
-                            cursor = conn.cursor()
-                            before ='/static/images/reviews/'+before_filename
-                            after = '/static/images/reviews/'+after_filename
-                            query = "insert into reviews (before_file_path, after_file_path, like_count, comment) values ('{}','{}', 0, '{}')".format(
-                                before, after, comment
-                            )
-                            print(query)
-                            cursor.execute(query)
-                            conn.commit()
-                            conn.close()
-            if msg == "Before Image Is Invalid" or (msg == "Before Image Is Invalid and After Image Is Invalid" or msg == "After Image Is Invalid"):
-                return render_template('add_review.html', msg=msg)
-            return render_template('add_review.html', msg='Review Successfully added')
-    except KeyError:
-        print('session not created')
-        return redirect('/admin/login')
+        file_name = request.args.get('file_name')
+        file_type= request.args.get('file_type')
+        if file_name != '':
+            S3_BUCKET = 'drowninbooks' 
+            """os.environ['S3_BUCKET_EMAIL']"""
+            s3 = boto3.client('s3')
+            presigned_post = s3.generate_presigned_post(
+                Bucket = S3_BUCKET,
+                Key = file_name,
+                Fields = {"acl": "public-read", "Content-Type": file_type},
+                Conditions = [
+                {"acl": "public-read"},
+                {"Content-Type": file_type}
+                ],
+                ExpiresIn = 3600
+            )
+            return {
+                'data': presigned_post,
+                'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name),
+            }
+        else:
+            raise ValueError
+    except Exception as e:
+        print(e)
+        return "Issue", 200
+
+@app.route('/send_review/data',methods=['POST'])
+def save_reviews():
+  data = request.get_json()
+  conn = sqlite3.connect('server.db')
+  cursor = conn.cursor()
+  f = False
+  for i in data:
+    if len(data[i]) <=0:
+      f= False
+      break
+    else:
+      f = True
+  if f:
+    query = """insert into reviews (before_file_path, after_file_path, like_count, comment) ({}, {}, 0, {})""".format(data['Before'], data['After'], data['Comment'])
+    cursor.execute(query)
+    conn.commit()
+  return "Issue", 200
 
 def get_taken_names():
-    list_of_files = glob.glob('static/images/reviews')
-    return list_of_files
+  s3 = boto3.resource('s3')
+  domains=[]
+  bucket = s3.Bucket('drowninbooks')
+  for obj in bucket.objects.all():
+    key = obj.key
+    domains.append(key)
+  return domains
+
 if __name__ == '__main__':
-    app.run(host=socket.gethostbyname(socket.gethostname()), debug=True)
+  app.run(host='0.0.0.0', debug=True)
