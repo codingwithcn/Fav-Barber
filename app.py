@@ -290,10 +290,10 @@ def save_file_image():
                 ],
                 ExpiresIn = 3600
             )
-            return {
+            return json({
                 'data': presigned_post,
                 'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name),
-            }
+            })
         else:
             raise ValueError
     except Exception as e:
