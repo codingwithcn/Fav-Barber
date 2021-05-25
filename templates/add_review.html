@@ -67,9 +67,11 @@
                         </div>
                         <div>{{msg}}</div>
                         <button data-wait="Please wait..." class="submit-button w-button" onclick="send_form()"/>Submit</button>
-                        <div id='be'></div>
-                        <div id='af'></div>
+                        <input id='be'>
+                        <input id='af'>
                         <script>
+                          document.getElementById('be').style.visibility ='hidden'
+                          document.getElementById('af').style.visibility ='hidden'
 
                           function send_form() {
                             let bef = document.getElementById('before').files
@@ -84,7 +86,8 @@
                             var be = document.getElementById('be')
                             var af = document.getElementById('af')
 
-                            save_all(be, af)
+
+                            save_all(be.value, af.value)
                           }
                           function getSignedRequest(bef, type){
                             let xhr = new XMLHttpRequest();
@@ -117,7 +120,7 @@
                               if(xhr.readyState === 4){
                                 if(xhr.status === 200 || xhr.status === 204){
                                   if (type == 'be'){
-                                    be.setAttribute("aria-label", url);
+                                    be.value = url;
                                   }else if (type=='af'){
                                     af.setAttribute("aria-label", url);
                                   }
@@ -131,13 +134,11 @@
                           }
 
                           function save_all(be, af){
-                            let bef_url = be.getAttribute('aria-label');
-                            let after_url = af.getAttribute('aria-label');
 
-                            console.log('bef_url: ' + bef_url)
-                            console.log('after_url: '+ after_url)
+                            console.log('bef_url: ' + be)
+                            console.log('after_url: '+ af)
 
-                            if (bef_url != 'Could not upload file.' && after_url !='Could not upload file.'){
+                            if (be != 'Could not upload file.' && af !='Could not upload file.'){
                               let web_host = '/send_review/data'
                               fetch(web_host, {
                                 method: 'POST',
@@ -145,8 +146,8 @@
                                   'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({
-                                  'Before': bef_url,
-                                  'After': after_url,
+                                  'Before': be,
+                                  'After': af,
                                   'Comment': document.getElementById('Comment').value
                                 })
                               }).then(result => {
