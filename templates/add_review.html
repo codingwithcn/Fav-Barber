@@ -140,6 +140,7 @@
                               if(xhr.readyState === 4){
                                 if(xhr.status === 200 || xhr.status === 204){
                                   is_it = true
+                                  console.log('Url: '+ url)
                                 }
                                 else{
                                   return "Could not upload file.";
@@ -147,10 +148,6 @@
                             }
                             };
                             xhr.send(postData);
-                            
-                            if (is_it){
-                              return url
-                            }
                           }
                         </script>
                     </div>
